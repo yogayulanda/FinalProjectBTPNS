@@ -1,6 +1,8 @@
 package com.example.pdamapps.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,7 +14,9 @@ import com.example.pdamapps.R;
 import com.example.pdamapps.databinding.ActivityLoginBinding;
 import com.example.pdamapps.model.APIResponse;
 import com.example.pdamapps.model.LoginRequest;
+import com.example.pdamapps.model.User;
 import com.example.pdamapps.viewsmodels.UserViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class LoginActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
@@ -50,25 +54,32 @@ public class LoginActivity extends AppCompatActivity {
         userViewModel.init();
     }
 
-    private void doLogin(){
-        String username =  binding.usernameGet.getText().toString();
-        String password =  binding.passwordGet.getText().toString();
+    void doLogin() {
+        String username = binding.usernameGet.getText().toString();
+        String password = binding.passwordGet.getText().toString();
+        LoginRequest loginRequest = new LoginRequest(username, password);
+        userViewModel.postLogin(loginRequest).observe(this, apiResponse -> {
 
-        if (password.equals("")){
-            Toast.makeText(getApplicationContext(),"Password Harus Di Isi", Toast.LENGTH_SHORT).show();
-        } else {
-            LoginRequest loginRequest = new LoginRequest(username, password);
-            userViewModel.postLogin(loginRequest).observe(this, nasabahResponse -> {
-                System.out.println("atas response : " + nasabahResponse.getMessage());
-                APIResponse response = nasabahResponse;
-                if (response.getResponse() == 200) {
-                    moveToMessageActivity("Sukses", "Selamat Anda Berhasil Terdaftar", 200);
-                }
-            });
-        }
-
+            if (apiResponse.getResponse()== 200) {
+                User user = apiResponse.getData();
+                System.out.println(user.getIdNasabah());
+                SharedPreferences sharedPreferences = getSharedPreferences("com.example.pdamapps", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("com.example.pdamapps.login", binding.usernameGet.getText().toString());
+                editor.putString("com.example.pdamapps.idNasabah", String.valueOf(user.getIdNasabah()));
+                editor.apply();
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Gagal Login")
+                        .setMessage("Username atau Password salah")
+                        .setNegativeButton("close", null)
+                        .show();
+            }
+        });
     }
-
     void moveToMessageActivity(String status, String message, int code){
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         Bundle bundle = new Bundle();

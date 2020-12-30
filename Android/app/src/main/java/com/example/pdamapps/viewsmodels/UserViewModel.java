@@ -5,11 +5,15 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.pdamapps.model.APIResponse;
 import com.example.pdamapps.model.LoginRequest;
+import com.example.pdamapps.model.LoginResponse;
+import com.example.pdamapps.model.NasabahResponse;
 import com.example.pdamapps.model.RegisterRequest;
 import com.example.pdamapps.repositories.UserRepository;
 
 public class UserViewModel extends ViewModel {
     private UserRepository userRepository;
+    private LiveData<NasabahResponse> mutableLiveDataNasabah;
+    private LiveData<LoginResponse> mutableLiveDataLogin;
     private LiveData<APIResponse> mutableLiveData;
     public void init(){
         if(mutableLiveData!=null){
@@ -25,12 +29,20 @@ public class UserViewModel extends ViewModel {
         return mutableLiveData;
     }
 
-    public LiveData<APIResponse> postLogin(LoginRequest loginRequest){
-        if(mutableLiveData==null){
+    public LiveData<LoginResponse> postLogin(LoginRequest loginRequest) {
+        if (mutableLiveDataLogin == null) {
             userRepository = userRepository.getInstance();
         }
-        mutableLiveData = userRepository.postLogin(loginRequest);
-        return mutableLiveData;
+        mutableLiveDataLogin = userRepository.postLogin(loginRequest);
+        return mutableLiveDataLogin;
+    }
+
+    public LiveData<NasabahResponse> getNasabah(String string) {
+        if (mutableLiveDataNasabah == null) {
+            userRepository = userRepository.getInstance();
+        }
+        mutableLiveDataNasabah = userRepository.getNasabah(string);
+        return mutableLiveDataNasabah;
     }
 }
 

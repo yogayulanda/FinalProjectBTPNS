@@ -4,23 +4,38 @@ import java.time.LocalDate;
 
 public class RegisterRequest {
 
+    private String fullName;
+    private String email;
     private String username;
     private String password;
-    private String fullName;
-    private String address;
-    private String email;
     private String noTelp;
     private String gender;
+    private String address;
 
-
-    public RegisterRequest(String username, String password, String fullName, String address, String email, String noTelp, String gender) {
+    public RegisterRequest(String fullName, String email, String username, String password, String noTelp, String gender, String address) {
+        this.fullName = fullName;
+        this.email = email;
         this.username = username;
         this.password = password;
-        this.fullName = fullName;
-        this.address = address;
-        this.email = email;
         this.noTelp = noTelp;
         this.gender = gender;
+        this.address = address;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -39,12 +54,20 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getNoTelp() {
+        return noTelp;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setNoTelp(String noTelp) {
+        this.noTelp = noTelp;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {
@@ -54,30 +77,4 @@ public class RegisterRequest {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNoTelp() {
-        return noTelp;
-    }
-
-    public void setNoTelp(String noTelp) {
-        this.noTelp = noTelp;
-    }
-
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
 }
-

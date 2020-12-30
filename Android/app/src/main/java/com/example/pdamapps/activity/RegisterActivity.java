@@ -59,11 +59,14 @@ public class RegisterActivity extends AppCompatActivity {
         String noTelp =  binding.noTelpGet.getText().toString();
         String address = binding.addressGet.getText().toString();
         String gender = binding.genderGet.getText().toString();
+        String saldo = binding.addressGet.getText().toString();
+        String tglLahir = binding.genderGet.getText().toString();
 
         if (password.equals("")){
             Toast.makeText(getApplicationContext(),"Password Harus Di Isi", Toast.LENGTH_SHORT).show();
         } else {
-            RegisterRequest registerRequest = new RegisterRequest(username, password, email, address, noTelp, fullName, gender);
+
+            RegisterRequest registerRequest = new RegisterRequest( fullName, email,  username,  password,  noTelp, gender, address);
             userViewModel.postRegister(registerRequest).observe(this, nasabahResponse -> {
                 System.out.println("atas response : " + nasabahResponse.getMessage());
                 APIResponse response = nasabahResponse;
@@ -82,6 +85,11 @@ public class RegisterActivity extends AppCompatActivity {
         bundle.putString("message", message);
         bundle.putInt("code", code);
         intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void Back(View view){
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }
