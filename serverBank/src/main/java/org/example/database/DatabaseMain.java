@@ -12,6 +12,10 @@ public class DatabaseMain {
             receive.loginNasabah();
             receive.logoutNasabah();
             receive.checkSaldo();
+            receive.getTagihan();
+            receive.getTagihanPdamFinal();
+            receive.addTransaksi();
+            receive.getNasabah();
         }catch (Exception e){
             System.out.println("Error DatabaseMain = " + e);
         }

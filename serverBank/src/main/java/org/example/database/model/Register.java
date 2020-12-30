@@ -1,16 +1,42 @@
 package org.example.database.model;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 public class Register {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idNasabah")
     int idNasabah;
+
+    @Column(name = "pelanggan")
+    private int id_pelanggan;
+
+    @Column(name = "noTelp")
     String noTelp;
+
+    @Column(name = "fullname")
     String fullName;
+
+    @Column(name = "address")
     String address;
+
+    @Column(name = "gender")
     String gender;
+
+    @Column(name = "username")
     String username;
+
+    @Column(name = "password")
     String password;
+
+    @Column(name = "email")
     String email;
+
+    @Column(name = "tglLahir")
     LocalDate tglLahir;
     int saldo;
 

@@ -53,6 +53,39 @@ public class ApiSender {
             System.out.println(" [x] Sent '" + nasabah + "'");
         }
     }
+
+    public static void getTagihan(String tfStr) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("getTagihan", false, false, false, null);
+            channel.basicPublish("", "getTagihan", null, tfStr.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Send Id Pelanggan: '" + tfStr + "'");
+        }
+    }
+
+    public static void addTransaksi(String tfStr) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("addTransaksi", false, false, false, null);
+            channel.basicPublish("", "addTransaksi", null, tfStr.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Send : '" + tfStr + "'");
+        }
+    }
+
+    public static void getNasabah(String tfStr) throws IOException, TimeoutException {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (Connection con = factory.newConnection();
+             Channel channel = con.createChannel()) {
+            channel.queueDeclare("getNasabah1", false, false, false, null);
+            channel.basicPublish("", "getNasabah1", null, tfStr.getBytes(StandardCharsets.UTF_8));
+            System.out.println(" [x] Send : '" + tfStr + "'");
+        }
+    }
 }
 
 

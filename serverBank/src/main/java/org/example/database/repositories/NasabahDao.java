@@ -1,9 +1,11 @@
 package org.example.database.repositories;
 
 import org.example.database.model.Nasabah;
+import org.example.database.model.Tagihan;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class NasabahDao {
@@ -32,5 +34,17 @@ public class NasabahDao {
             System.out.println("masuk cek saldo 22");
             return query.getResultList().size();
         }
+    }
+
+    public Nasabah getNasabah(String userString) {
+        Nasabah mhs;
+        try {
+            mhs = entityManager.createQuery("SELECT a FROM Nasabah a where a.idNasabah ='"+userString+"'", Nasabah.class).getSingleResult();
+        } catch (NoResultException e){
+            System.out.println("no Result");
+            mhs = null;
+
+        }
+        return mhs;
     }
 }

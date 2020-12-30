@@ -1,9 +1,11 @@
 package org.example.restapi.rabbitmq;
 
+import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import org.example.database.model.Tagihan;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.concurrent.TimeoutException;
 public class ApiReceiver {
     protected String message;
     private String saldoResponse;
+    private boolean success=false;
 
     public void setMessage(String message) {
         this.message = message;
@@ -48,7 +51,7 @@ public class ApiReceiver {
     }
 
     public String checkSaldo() throws IOException, TimeoutException {
-
+    message="";
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost("localhost");
@@ -62,8 +65,9 @@ public class ApiReceiver {
             };
             channel.basicConsume("messageFromDatabase", true, deliverCallback, consumerTag -> {
             });
-
-                TimeUnit.SECONDS.sleep(5);
+            while(message.equals("")){
+                Thread.sleep(2);
+            }
             if (!this.message.equals("0")) {
                 JSONObject object = new JSONObject();
                 object.put("response", 200);
@@ -81,12 +85,13 @@ public class ApiReceiver {
         } catch (Exception e) {
             System.out.println("Exception login Res: " + e);
         }
-        System.out.println("isi saldo response: "+this.getSaldoResponse());
+        System.out.println("isi saldo response: " + this.getSaldoResponse());
         return this.getSaldoResponse();
     }
 
     public String loginApiRes() throws IOException, TimeoutException {
         String loginResponse = "";
+        message="";
         try {
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost("localhost");
@@ -100,13 +105,11 @@ public class ApiReceiver {
             };
             channel.basicConsume("messageFromDatabase", true, deliverCallback, consumerTag -> {
             });
-            TimeUnit.SECONDS.sleep(5);
+            while(message.equals("")){
+                Thread.sleep(2);
+            }
             if (!this.message.equals("0")) {
-                JSONObject object = new JSONObject();
-                object.put("response", 200);
-                object.put("status", "Success");
-                object.put("message", "Success Login");
-                loginResponse = object.toJSONString();
+                loginResponse = this.message;
             } else {
                 JSONObject object = new JSONObject();
                 object.put("response", 400);
@@ -161,4 +164,77 @@ public class ApiReceiver {
     public String getMessage() {
         return message;
     }
+
+    public String getTagihanFromServer() throws IOException, TimeoutException {
+        this.message="";
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received '" + message + "'");
+                this.message = message;
+
+            };
+            channel.basicConsume("sendToApiReceive", true, deliverCallback, consumerTag -> {
+            });
+
+            while (this.message.equals("")){
+                TimeUnit.MILLISECONDS.sleep(5);
+            }
+            if (!this.message.equals("0")) {
+                saldoResponse = this.message;
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("response", 400);
+                object.put("status", "Error");
+                object.put("message", "Anda Tidak memiliki Akses untuk cek saldo, Mohon Login Terlebih Dahulu!!!");
+                saldoResponse = object.toJSONString();
+            }
+        } catch (Exception e) {
+            System.out.println("Exception login Res: " + e);
+        }
+        System.out.println("isi saldo response: " + this.getSaldoResponse());
+        return this.getSaldoResponse();
+    }
+
+    public String getNasabah() throws IOException, TimeoutException {
+        message="";
+        try {
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("localhost");
+            Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel();
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println(" [x] Received '" + message + "'");
+                this.message = message;
+
+            };
+            channel.basicConsume("getNasabah", true, deliverCallback, consumerTag -> {
+            });
+
+            while(message.equals("")){
+                Thread.sleep(100);
+            }
+            if (!this.message.equals("0")) {
+                saldoResponse = this.message;
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("response", 400);
+                object.put("status", "Error");
+                object.put("message", "Anda Tidak memiliki Akses untuk cek saldo, Mohon Login Terlebih Dahulu!!!");
+                saldoResponse = object.toJSONString();
+            }
+        } catch (Exception e) {
+            System.out.println("Exception login Res: " + e);
+        }
+        System.out.println("isi saldo response: " + this.getSaldoResponse());
+        return this.getSaldoResponse();
+    }
+
 }

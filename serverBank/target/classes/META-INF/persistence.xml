@@ -5,6 +5,7 @@
         <class>org.example.database.model.User</class>
         <class>org.example.database.model.Saldo</class>
         <class>org.example.database.model.Nasabah</class>
+        <class>org.example.database.model.Transaksi</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/final_project"/>
             <property name="javax.persistence.jdbc.user" value="root" />

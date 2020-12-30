@@ -1,8 +1,10 @@
 package org.example.database.repositories;
 
+import org.example.database.model.Nasabah;
 import org.example.database.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class UserDao {
@@ -56,19 +58,29 @@ public class UserDao {
     }
 
     //function kondisi ambil status login dengn no telp
-    public int checkUserSaldo(String username){
+    public int checkUserSaldo(String username) {
         String select = "SELECT idNasabah FROM User WHERE username=:username AND isLoggedIn=:isLoggedIn";
         Query query = entityManager.createQuery(select);
         query.setParameter("username", username);
         query.setParameter("isLoggedIn", "true");
-        if (query.getResultList().size()!=0){
+        if (query.getResultList().size() != 0) {
             System.out.println("masuk 12");
-            return (int)query.getResultList().get(0);
+            return (int) query.getResultList().get(0);
         } else {
             System.out.println("masuk 22");
             return query.getResultList().size();
         }
     }
+        public User getUser(String userString) {
+            User mhs;
+            try {
+                mhs = entityManager.createQuery("SELECT a FROM User a where a.userId ='"+userString+"'", User.class).getSingleResult();
+            } catch (NoResultException e){
+                System.out.println("no Result");
+                mhs = null;
+            }
+            return mhs;
+        }
 }
 
 
